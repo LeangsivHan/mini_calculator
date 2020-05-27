@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Lab2 of CSS3</title>
+	<meta name="Author" content="Leangsiv">
+	<meta name="Description" content="Calculator">
+	<meta name="Keyword" content="Calculator">
+
+	<style type="text/css">
+		/*------------------------------------------------- At the Top -------------------------------------------------*/
+		.marquee{
+			overflow: hidden; 
+			object-position: hidden;
+			width: auto;
+			height: auto;
+			background-color: lightblue;
+			-webkit-animation-name: example; /* Safari 4.0 - 8.0 */
+			-webkit-animation-duration: 5s; /* Safari 4.0 - 8.0 */
+			animation-name: example;
+			animation-duration: 5s;
+			animation-iteration-count: infinite;
+			border: 4px solid #E0E0E0;
+			padding: 20px; 
+		}
+
+		/* Safari 4.0 - 8.0 */
+		@-webkit-keyframes example {
+		  0%   {background-color:tomato; left:0px; top:0px;}
+		  25%  {background-color:orange; left:200px; top:0px;}
+		  50%  {background-color:dodgerblue; left:200px; top:200px;}
+		  75%  {background-color:lightgreen; left:0px; top:200px;}
+		  100% {background-color:pink; left:0px; top:0px;}
+		}
+
+		/* Standard syntax */
+		@keyframes example {
+		  0%   {background-color:tomato; left:0px; top:0px;}
+		  25%  {background-color:orange; left:200px; top:0px;}
+		  50%  {background-color:dodgerblue; left:200px; top:200px;}
+		  75%  {background-color:lightgreen; left:0px; top:200px;}
+		  100% {background-color:pink; left:0px; top:0px;}
+		}
+
+		.marquee h1{
+		 position: sticky;
+		 width: 99%;
+		 margin: 0;
+		 line-height: 0px;
+		 text-align: center;
+		 color: white;
+		 /* Starting position */
+		 -moz-transform:translateX(50%);
+		 -webkit-transform:translateX(50%);	
+		 transform:translateX(50%);
+		 /* Apply animation to this element */	
+		 -moz-animation: scroll-left 8s linear infinite;
+		 -webkit-animation: scroll-left 8s linear infinite;
+		 animation: scroll-left 8s linear infinite;
+		}
+
+		/* Move it (define the animation) */
+		@-moz-keyframes scroll-left {
+		 0%   { -moz-transform: translateX(50%); }
+		 100% { -moz-transform: translateX(-50%); }
+		}
+		@-webkit-keyframes scroll-left {
+		 0%   { -webkit-transform: translateX(50%); }
+		 100% { -webkit-transform: translateX(-50%); }
+		}
+		@keyframes scroll-left {
+		 0%   { 
+		 -moz-transform: translateX(50%); /* Browser bug fix */
+		 -webkit-transform: translateX(50%); /* Browser bug fix */
+		 transform: translateX(50%); 		
+		 }
+		 100% { 
+		 -moz-transform: translateX(-100%); /* Browser bug fix */
+		 -webkit-transform: translateX(-100%); /* Browser bug fix */
+		 transform: translateX(-100%); 
+		 }
+		}
+		/*----------------------------------------------------------------------*/
+
+		body{
+			margin:0px;
+			background: linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c);
+		}
+
+		/* view of the calculator */
+		.view{
+			width: 100%;
+			height: 70px;
+			font-size: 25px;
+			font-weight: bold;
+			color: white;
+			text-align: center;
+			align-items: center;
+			align-self: center;
+			overflow: hidden; 
+			background-color: lightblue;
+			-webkit-animation-name:change; /* Safari 4.0 - 8.0 */
+			-webkit-animation-duration: 5s; /* Safari 4.0 - 8.0 */
+			animation-name: change;
+			animation-duration: 5s;
+			animation-iteration-count: infinite;
+			padding-left: 40px;
+			padding-right: 40px;
+			border-radius: 5px; 	
+			cursor: pointer;
+		}
+
+		/* Safari 4.0 - 8.0 */
+		@-webkit-keyframes change {
+		  0%   {background-color:tomato;}
+		  25%  {background-color:orange;}
+		  50%  {background-color:dodgerblue;}
+		  75%  {background-color:lightgreen;}
+		  100% {background-color:pink;}
+		}
+
+		/* Standard syntax */
+		@keyframes change {
+		  0%   {background-color:tomato;}
+		  25%  {background-color:orange; }
+		  50%  {background-color:dodgerblue; }
+		  75%  {background-color:lightgreen;}
+		  100% {background-color:pink; }
+		}
+		/* ---------------------- */
+
+		.background{
+			/* use position absolute to set top left right ,.. */
+			position: absolute;
+			top: 53%;
+			left: 50%;
+			transform: translateX(-50%) translateY(-50%);
+			align-items: center;
+			text-align: center;
+			align-self: center;
+			background-color: #c55252;
+			padding: 25px;
+			border-radius: 15px;
+			border: 50px solid #147260ba;
+			width: auto;
+		}
+
+		#answer{
+			background-color: white;
+			border-radius: 3px;
+			border-color: white;
+			letter-spacing: 4px;
+			max-height: 50px;
+			max-width: 426px;
+			text-align: right;
+			border: 0px;
+			font-size: 42px;
+		}
+
+		sup{
+			font-size: 50px;
+			color: #3f0615db;
+			font-weight: bold;
+			font-family: fantasy;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- JavaScript -->
+	<script type="text/javascript">
+		var queue = [];
+        var input = 0;
+        function calculateQueue(value){
+            if (input !==0) {
+            	input = parseFloat(input);
+                addToQueue(input);
+            }
+
+            var answer = value[0];
+            var dividedByZero = 0;
+
+            for (  var i = 2; i < value.length; i= i+2) {
+
+                switch (queue[i-1]) {
+                    case '+':
+                        answer += value[i];
+                        break;
+
+                    case '-':
+                        answer -= value[i];
+                        break;
+
+                    case '/':    
+                    	if (value[i] === 0){
+                    		dividedByZero = 1;
+                    	}else{
+                    		answer = answer / value[i];
+                    	}      
+                        break;
+
+                    case 'x': answer *= value[i];
+                        break;
+
+                    case '%': answer %= value[i];
+                    	break;
+                }
+            }
+
+            answer = answer.toFixed(10);
+            answer = parseFloat(answer);
+            if ( dividedByZero === 1) { clearAll();
+                document.getElementById("answer").innerHTML =  "Wrong Input!!!";
+            }else{
+            	document.getElementById("answer").innerHTML =  answer ;
+                input = answer;
+            	queue = [];
+        	}
+        }
+
+        function addToQueue(input){
+            queue.push(input);
+        }
+
+        function clearAll() {
+            queue = [];
+            input = 0;
+            document.getElementById("answer").innerHTML = "0";
+        }
+
+        function numberButton(arg){
+            if ( document.getElementById("answer").innerHTML ===  "Wrong Input!!!" || (document.getElementById("answer").innerHTML == "0" && arg != "."))
+              { document.getElementById("answer").innerHTML = ""; }
+
+            if (!(arg === ".") || !input.match(/[.]/)) {
+	            input += arg;
+	            document.getElementById("answer").innerHTML += arg;
+        	}
+        }
+
+        function operatorButton(arg){
+            if (input !== 0 && input !== "-") {
+                input = parseFloat(input);
+                addToQueue(input);
+                addToQueue(arg);
+                document.getElementById("answer").innerHTML +=arg;
+                input = 0;
+            }
+            if (arg == "-"  && isNaN(queue[0]) && input !== "-"){
+            	input ="-";
+                document.getElementById("answer").innerHTML = "-";
+          	}
+        }	
+	</script>
+	<!------------------------------------------------------------->
+
+	<!-- TOP -->
+	<div class="marquee">
+		<h1>I'm Leangsiv.This is my CSS Lab.</h1>
+	</div>
+
+	<!-- Calculator -->
+	<div class="background">
+		<div><sup>CALCULATOR</sup></div>
+		
+		<div id="answer">0</div> 
+			
+		<table>
+			
+			<tr>
+				<td ><input type="button" value="C" class="view" onclick="clearAll()"></td>
+				<td ><input type="button" value="/" class="view" onclick="operatorButton('/')"></td>
+				<td ><input type="button" value="x" class="view" onclick="operatorButton('x')"></td>
+				<td ><input type="button" value="%" class="view" onclick="operatorButton('%')"></td>
+			</tr>
+			<tr>
+				<td ><input type="button" value="៧" class="view" onclick="numberButton('7')"></td>
+				<td ><input type="button" value="៨" class="view" onclick="numberButton('8')"></td>
+				<td ><input type="button" value="៩" class="view" onclick="numberButton('9')"></td>
+				<td ><input type="button" value="-" class="view" onclick="operatorButton('-')"></td>
+			</tr>
+			<tr>
+				<td ><input type="button" value="៤" class="view" onclick="numberButton('4')"></td>
+				<td ><input type="button" value="៥" class="view" onclick="numberButton('5')"></td>
+				<td ><input type="button" value="៦" class="view" onclick="numberButton('6')"></td>
+				<td><input type="button" value="+" class="view" onclick="operatorButton('+')"></td>
+			</tr>
+			<tr>
+				<td ><input type="button" value="១" class="view" onclick="numberButton('1')"></td>
+				<td ><input type="button" value="២" class="view" onclick="numberButton('2')"></td>
+				<td ><input type="button" value="៣" class="view" onclick="numberButton('3')"></td>
+				<td rowspan="2"><input type="button" value="=" class="view" style="height: 143px;"  onclick="calculateQueue(queue)"></td>
+			</tr>
+			<tr>
+				<td colspan="2"><input type="button" value="0" class="view" onclick="numberButton('0')"></td>
+				<td ><input type="button" value="." class="view" onclick="numberButton('.')"></td>
+			</tr>
+			
+		</table>
+	</div>
+</body>
+</html>
